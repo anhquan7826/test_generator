@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:test_generator/paragraph/paragraph.data.dart';
 import 'package:test_generator/question_single_choice/question_single_choice.data.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -37,23 +40,17 @@ class _GeneratorState extends State<Generator> {
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
-    TextEditingController()
   ];
-
+  int correctAnswer = -1;
   List template = [];
 
   @override
   Widget build(BuildContext context) {
-    print(template.length);
     return Scaffold(
       appBar: AppBar(
         title: TextButton(
           onPressed: () {
-            StringBuffer sb = StringBuffer();
-            for (var element in template) {
-              sb.write('${element.toJson()}\n');
-            }
-            print(sb.toString());
+            File('output.json').writeAsString('{"content": ${template.map((e) => json.encode(e)).toList()}}');
           },
           child: const Text('Export', style: TextStyle(color: Colors.white),),
         ),
@@ -120,36 +117,66 @@ class _GeneratorState extends State<Generator> {
                                     hintText: 'question'
                                 ),
                               ),
-                              TextField(
-                                controller: questionControllers[1],
-                                decoration: const InputDecoration(
-                                    hintText: 'answer 1'
+                              RadioListTile(
+                                title: TextField(
+                                  controller: questionControllers[1],
+                                  decoration: const InputDecoration(
+                                      hintText: 'answer 1'
+                                  ),
                                 ),
+                                groupValue: correctAnswer,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    if (value != null) correctAnswer = value;
+                                  });
+                                },
+                                value: 0,
                               ),
-                              TextField(
-                                controller: questionControllers[2],
-                                decoration: const InputDecoration(
-                                    hintText: 'answer 2'
+                              RadioListTile(
+                                title: TextField(
+                                  controller: questionControllers[2],
+                                  decoration: const InputDecoration(
+                                      hintText: 'answer 2'
+                                  ),
                                 ),
+                                groupValue: correctAnswer,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    if (value != null) correctAnswer = value;
+                                  });
+                                },
+                                value: 1,
                               ),
-                              TextField(
-                                controller: questionControllers[3],
-                                decoration: const InputDecoration(
-                                    hintText: 'answer 3'
+                              RadioListTile(
+                                title: TextField(
+                                  controller: questionControllers[3],
+                                  decoration: const InputDecoration(
+                                      hintText: 'answer 3'
+                                  ),
                                 ),
+                                groupValue: correctAnswer,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    if (value != null) correctAnswer = value;
+                                  });
+                                },
+                                value: 2,
                               ),
-                              TextField(
-                                controller: questionControllers[4],
-                                decoration: const InputDecoration(
-                                    hintText: 'answer 4'
+                              RadioListTile(
+                                title: TextField(
+                                  controller: questionControllers[4],
+                                  decoration: const InputDecoration(
+                                      hintText: 'answer 4'
+                                  ),
                                 ),
+                                groupValue: correctAnswer,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    if (value != null) correctAnswer = value;
+                                  });
+                                },
+                                value: 3,
                               ),
-                              TextField(
-                                controller: questionControllers[5],
-                                decoration: const InputDecoration(
-                                    hintText: 'correct answer index'
-                                ),
-                              )
                             ],
                           ),
                         )
@@ -172,7 +199,7 @@ class _GeneratorState extends State<Generator> {
                     questionControllers[3].text,
                     questionControllers[4].text
                   ],
-                  correctAnswer: int.parse(questionControllers[5].text)
+                  correctAnswer: correctAnswer
               ));
             } else {
               template.add(
